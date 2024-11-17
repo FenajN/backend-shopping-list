@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const addUserIdMiddleware = require('../middlewares/addUserIdMiddleware');
 const authMiddleware = require('../middlewares/authMiddleware');
 const shoppingListController = require('../controllers/shoppingListController');
 
-router.post('/', authMiddleware('Owner'), shoppingListController.createShoppingList);
+router.get('/', authMiddleware(), shoppingListController.getAllShoppingLists);
 
-router.get('/:id', authMiddleware('Member'), shoppingListController.getShoppingList);
+router.post('/', authMiddleware(), shoppingListController.createShoppingList);
+
+router.get('/:id', authMiddleware(['Member', 'Owner']), shoppingListController.getShoppingList);
 
 router.put('/:id', authMiddleware('Owner'), shoppingListController.updateShoppingList);
 
@@ -18,4 +19,11 @@ router.put('/:id/archive', authMiddleware('Owner'), shoppingListController.archi
 
 router.put('/:id/restore', authMiddleware('Owner'), shoppingListController.restoreList);
 
+router.delete('/:id/members', authMiddleware(['Owner', 'Member']), shoppingListController.removeMember);
+
+router.post('/:id/members', authMiddleware('Owner'), shoppingListController.addMember);
+
+router.delete("/:id/items/:itemId", authMiddleware(''), shoppingListController.removeItem);
+
 module.exports = router;
+

@@ -1,4 +1,3 @@
-// errorHandling.js
 
 /**
  * @param {Object} res

@@ -32,3 +32,21 @@ exports.deleteOwner = async (req, res) => {
     res.status(500).json({ status: "error", error: error.message });
   }
 };
+
+exports.deleteList = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const list = await ShoppingList.findById(id);
+    if (!list) {
+      return res.status(404).json({ error: "List not found" });
+    }
+
+    await ShoppingList.findByIdAndDelete(id);
+
+    res.status(200).json({ status: "success", message: "List deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting list:", error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};

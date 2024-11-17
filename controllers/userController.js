@@ -28,3 +28,29 @@ exports.removeSelfFromList = async (req, res) => {
     res.status(500).json({ status: "error", error: error.message });
   }
 };
+
+exports.searchUsers = async (req, res) => {
+  try {
+    const { search } = req.query;
+    if (!search) {
+      return res.status(400).json({ error: "Search query is required" });
+    }
+
+    const users = await User.find({
+      $or: [
+        { username: { $regex: `^${search}$`, $options: "i" } },
+        { email: { $regex: `^${search}$`, $options: "i" } }
+      ],
+    }).select("id username email");
+
+    if (users.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error searching users:", error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+

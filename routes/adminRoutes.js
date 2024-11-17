@@ -1,13 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const addUserIdMiddleware = require('../middlewares/addUserIdMiddleware');
-const authMiddleware = require('../middlewares/authMiddleware');
-const adminController = require('../controllers/adminController');
+const authMiddleware = require("../middlewares/authMiddleware");
+const adminController = require("../controllers/adminController");
+const authController = require("../controllers/authController");
 
-router.get('/lists', authMiddleware('Admin'), adminController.getAllLists);
+router.post("/login", authController.adminLogin);
 
-router.delete('/user/:id', authMiddleware('Admin'), adminController.deleteUser);
+router.get("/lists", authMiddleware("Admin"), adminController.getAllLists);
 
-router.delete('/owner/:id', authMiddleware('Admin'), adminController.deleteOwner);
+router.delete("/user/:id", authMiddleware("Admin"), adminController.deleteUser);
+
+router.delete("/list/:id", authMiddleware("Admin"), adminController.deleteList);
 
 module.exports = router;

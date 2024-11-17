@@ -1,17 +1,23 @@
-const mongoose = require('mongoose');
-
-const itemSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  isCompleted: { type: Boolean, default: false }
-});
+const mongoose = require("mongoose");
 
 const shoppingListSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  members: [
+    {
+      userId: { type: mongoose.Types.ObjectId, required: true },
+      role: { type: String, enum: ["Owner", "Member"], required: true },
+    },
+  ],
+  items: [
+    {
+      name: { type: String, required: true },
+      isCompleted: { type: Boolean, default: false },
+    },
+  ],
   isArchived: { type: Boolean, default: false },
-  items: [itemSchema]
 });
 
-module.exports = mongoose.model('ShoppingList', shoppingListSchema);
+module.exports = mongoose.model("ShoppingList", shoppingListSchema);
+
+
 
